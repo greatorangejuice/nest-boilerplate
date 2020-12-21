@@ -61,7 +61,11 @@ export class UsersService {
       }
 
     } catch (e) {
-
+      console.log(e.message);
     }
+  }
+
+  async getUserByName(username: string): Promise<User> {
+    return this.usersRepository.findOne({username: username})
   }
 }
