@@ -6,18 +6,25 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import * as bcrypt from 'bcrypt'
 import { validate } from "class-validator";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import {Role} from "./roles/user-roles.entity";
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+
+    @InjectRepository(Role)
+    private readonly rolesRepository: Repository<Role>
   ) {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
 
+      const roles = await this.rolesRepository.find()
+      const userRole = roles.find(role => role.role.toLocaleLowerCase() === 'user')
       const userCandidate = await this.usersRepository.find({where: {email: createUserDto.email}})
+
       if (userCandidate.length !== 0) {
         throw new HttpException({
           status: HttpStatus.CONFLICT,
@@ -29,6 +36,7 @@ export class UsersService {
       user.username = createUserDto.username;
       user.email = createUserDto.email;
       user.password = await bcrypt.hash(createUserDto.password, 10);
+      user.roles = [userRole];
 
       const errors = await validate(user);
       if (errors.length > 0) {
@@ -56,12 +64,12 @@ export class UsersService {
       const comparedPassword = await bcrypt.compareSync(updateUserDto.password, olderUser.password)
       if (comparedPassword) {
         const newUser = {...olderUser, ...updateUserDto}
-        newUser.password =await bcrypt.hash(updateUserDto.password, 10);
+        newUser.password = await bcrypt.hash(updateUserDto.password, 10);
         return await this.usersRepository.save(newUser)
       }
 
     } catch (e) {
-      console.log(e.message);
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
     }
   }
 
