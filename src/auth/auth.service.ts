@@ -13,6 +13,9 @@ export class AuthService {
   async validateUser(username: string, password: string): Promise<any> {
     try {
       const user = await this.userService.getUserByName(username)
+      if(user === undefined) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+      }
       const comparedPassword = await bcrypt.compareSync(password, user.password)
 
       if (comparedPassword) {
@@ -22,9 +25,9 @@ export class AuthService {
 
     } catch (e) {
       throw new HttpException({
-        status: HttpStatus.NOT_FOUND,
+        status: HttpStatus.CONFLICT,
         error: e.message,
-      }, HttpStatus.NOT_FOUND)
+      }, HttpStatus.CONFLICT)
     }
   }
 
