@@ -11,10 +11,6 @@ import {RolesGuard} from "../auth/guards/roles.guard";
   imports: [TypeOrmModule.forFeature([User, Role])],
   providers: [
       UsersService,
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard
-    }
   ],
   controllers: [UsersController],
   exports: [UsersService]

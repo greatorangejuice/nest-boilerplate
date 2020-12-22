@@ -84,4 +84,8 @@ export class UsersService {
   async getUserWithRoles(username) {
       return await this.usersRepository.findOne({relations: ["roles"], where: {username: username}} )
   }
+
+  async getAll(): Promise<User[]> {
+      return this.usersRepository.find({relations: ['roles']})
+  }
 }

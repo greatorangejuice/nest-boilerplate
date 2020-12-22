@@ -5,6 +5,7 @@ import {UpdateUserDto} from "./dto/update-user.dto";
 import {JwtAuthGuard} from "../auth/guards/jwt-auth.guard";
 import {Roles} from "../common/decorators/roles.decorator";
 import {ERole} from "../common/models/enums/role.enum";
+import {RolesGuard} from "../auth/guards/roles.guard";
 
 @Controller('users')
 export class UsersController {
@@ -15,9 +16,16 @@ export class UsersController {
     return this.usersService.create(createUserDto)
   }
 
+  @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(ERole.User)
+  getAllUsers() {
+    return this.usersService.getAll()
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  // @Roles(ERole.User)
+  @Roles(ERole.User)
   getUserById(@Param('id') id: number) {
     return this.usersService.getUserById(id)
   }
