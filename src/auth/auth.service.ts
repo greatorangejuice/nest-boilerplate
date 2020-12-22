@@ -12,7 +12,9 @@ export class AuthService {
 
   async validateUser(username: string, password: string): Promise<any> {
     try {
-      const user = await this.userService.getUserByName(username)
+
+      const user = await this.userService.getUserWithRoles(username);
+      // const user = await this.userService.getUserByName(username)
       if(user === undefined) {
         throw new HttpException('User not found', HttpStatus.NOT_FOUND)
       }
@@ -32,10 +34,12 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = {username: user.username, sub: user.userId }
+    const payload = {username: user.username, sub: user.id, roles: user.roles.map(role => role.role) }
 
     return {
       access_token: this.jwtService.sign(payload),
+      username: user.username,
+      roles: payload.roles,
     };
   }
 }

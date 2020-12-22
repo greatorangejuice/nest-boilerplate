@@ -1,8 +1,10 @@
 import {Body, Controller, Get, Param, Post, Put, UseGuards} from "@nestjs/common";
-import { UsersService } from "./users.service";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { UpdateUserDto } from "./dto/update-user.dto";
+import {UsersService} from "./users.service";
+import {CreateUserDto} from "./dto/create-user.dto";
+import {UpdateUserDto} from "./dto/update-user.dto";
 import {JwtAuthGuard} from "../auth/guards/jwt-auth.guard";
+import {Roles} from "../common/decorators/roles.decorator";
+import {ERole} from "../common/models/enums/role.enum";
 
 @Controller('users')
 export class UsersController {
@@ -15,6 +17,7 @@ export class UsersController {
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
+  // @Roles(ERole.User)
   getUserById(@Param('id') id: number) {
     return this.usersService.getUserById(id)
   }

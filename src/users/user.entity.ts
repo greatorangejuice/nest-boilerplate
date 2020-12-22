@@ -6,18 +6,28 @@ import {Role} from "./roles/user-roles.entity";
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column()
+  @Column({
+    nullable: false,
+    unique: true,
+  })
   username: string;
 
-  @Column()
-  @IsEmail()
-  email: string;
+  // You can use @BeforeInsert() async hashPassword() {
+  //         this.password = await bcrypt.hash(this.password, 10);
+  //     }
 
   @Column()
   password: string;
+
+  @Column({
+    nullable: false,
+    unique: true
+  })
+  @IsEmail()
+  email: string;
 
   @ManyToMany(() => Role)
   @JoinTable()

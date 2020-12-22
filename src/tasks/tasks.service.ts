@@ -14,19 +14,19 @@ export class TasksService {
     private usersService: UsersService,
   ) {}
 
-  // async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
-  //   const task = {...new Task(), ...createTaskDto, deadlineTime: new Date(Date.now() + 2*24*60*60*1000)}
-  //   try {
-  //     task.executor = await this.usersService.findOne('27');
-  //     return await this.tasksRepository.save(task);
-  //
-  //   } catch(e) {
-  //     throw new HttpException({
-  //       status: HttpStatus.FORBIDDEN,
-  //       error: e.message,
-  //     }, HttpStatus.FORBIDDEN)
-  //   }
-  // }
+  async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+    const task = {...new Task(), ...createTaskDto, deadlineTime: new Date(Date.now() + 2*24*60*60*1000)}
+    try {
+      task.customer = await this.usersService.getUserByName('Sammy')
+      return await this.tasksRepository.save(task);
+
+    } catch(e) {
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: e.message,
+      }, HttpStatus.FORBIDDEN)
+    }
+  }
 
 
 

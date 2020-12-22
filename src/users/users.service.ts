@@ -21,38 +21,42 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
 
-      const roles = await this.rolesRepository.find()
-      const userRole = roles.find(role => role.role.toLocaleLowerCase() === 'user')
-      const userCandidate = await this.usersRepository.find({where: {email: createUserDto.email}})
+    try {
+        const roles = await this.rolesRepository.find()
+        const userRole = roles.find(role => role.role.toLocaleLowerCase() === 'user')
+        const userCandidate = await this.usersRepository.find({where: {email: createUserDto.email}})
 
-      if (userCandidate.length !== 0) {
-        throw new HttpException({
-          status: HttpStatus.CONFLICT,
-          error: 'This email is already taken'
-        }, HttpStatus.CONFLICT)
-      }
+        if (userCandidate.length !== 0) {
+            throw new HttpException({
+                status: HttpStatus.CONFLICT,
+                error: 'This email is already taken'
+            }, HttpStatus.CONFLICT)
+        }
 
-      const user = new User();
-      user.username = createUserDto.username;
-      user.email = createUserDto.email;
-      user.password = await bcrypt.hash(createUserDto.password, 10);
-      user.roles = [userRole];
+        const user = new User();
+        user.username = createUserDto.username;
+        user.email = createUserDto.email;
+        user.password = await bcrypt.hash(createUserDto.password, 10);
+        user.roles = [userRole];
 
-      const errors = await validate(user);
-      if (errors.length > 0) {
-        throw new HttpException({
-          status: HttpStatus.FORBIDDEN,
-          error: 'User data is not valid'
-        }, HttpStatus.FORBIDDEN)
-      }
+        const errors = await validate(user);
+        if (errors.length > 0) {
+            throw new HttpException({
+                status: HttpStatus.FORBIDDEN,
+                error: 'User data is not valid'
+            }, HttpStatus.FORBIDDEN)
+        }
 
-      return await this.usersRepository.save(user)
+        return await this.usersRepository.save(user)
+    } catch (e) {
+        throw new HttpException(e.message, HttpStatus.CONFLICT)
+    }
 
   }
 
   async getUserById(id: number): Promise<User> {
    try {
-     return await this.usersRepository.findOne(id)
+       return await this.usersRepository.findOne(id)
    } catch (e) {
      throw new HttpException('something wrong', HttpStatus.BAD_REQUEST)
    }
@@ -75,5 +79,9 @@ export class UsersService {
 
   async getUserByName(username: string): Promise<User> {
     return this.usersRepository.findOne({username: username})
+  }
+
+  async getUserWithRoles(username) {
+      return await this.usersRepository.findOne({relations: ["roles"], where: {username: username}} )
   }
 }
