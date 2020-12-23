@@ -4,7 +4,7 @@ import {CreateUserDto} from "./dto/create-user.dto";
 import {UpdateUserDto} from "./dto/update-user.dto";
 import {JwtAuthGuard} from "../auth/guards/jwt-auth.guard";
 import {Roles} from "../common/decorators/roles.decorator";
-import {ERole} from "../common/models/enums/role.enum";
+import {ERole} from "../models/enums/role.enum";
 import {RolesGuard} from "../auth/guards/roles.guard";
 
 @Controller('users')

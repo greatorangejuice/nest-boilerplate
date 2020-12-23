@@ -1,7 +1,7 @@
 import {Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {IsEmail} from "class-validator";
 import { Task } from "../tasks/tasks.entity";
-import {Role} from "./roles/user-roles.entity";
+import {Role} from "../roles/user-roles.entity";
 // import { Role } from "./roles/user-roles.entity";
 
 @Entity()
