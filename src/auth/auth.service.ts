@@ -14,7 +14,6 @@ export class AuthService {
     try {
 
       const user = await this.userService.getUserWithRoles(username);
-      // const user = await this.userService.getUserByName(username)
       if(user === undefined) {
         throw new HttpException('User not found', HttpStatus.NOT_FOUND)
       }

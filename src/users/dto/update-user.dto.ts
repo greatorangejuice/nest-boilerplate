@@ -1,4 +1,4 @@
-import { ERole } from "../../models/enums/role.enum";
+import { ERole } from "../../models/roles/enums/role.enum";
 
 export class UpdateUserDto {
   username: string;

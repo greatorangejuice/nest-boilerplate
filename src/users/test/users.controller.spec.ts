@@ -1,8 +1,9 @@
 // import {UsersController} from "../users.controller";
 // import {UsersService} from "../users.service";
 // import {Repository} from "typeorm";
-// import {User} from "../user.entity";
-// import {Role} from "../roles/user-roles.entity";
+// import { User } from "../../models/users/user.entity";
+// import { Role } from "../../models/roles/user-roles.entity";
+//
 //
 // describe('UsersController', () => {
 //     let usersController: UsersController;

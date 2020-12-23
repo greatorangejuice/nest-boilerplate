@@ -31,6 +31,6 @@ export class TasksService {
 
 
   async getTasks(): Promise<Task[]> {
-    return this.tasksRepository.find({cache: 60000})
+    return await this.tasksRepository.find({cache: 60000})
   }
 }

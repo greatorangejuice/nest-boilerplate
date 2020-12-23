@@ -24,28 +24,29 @@ export class UsersService {
     try {
         const roles = await this.rolesRepository.find()
         const userRole = roles.find(role => role.role.toLocaleLowerCase() === 'user')
-        const userCandidate = await this.usersRepository.find({where: {email: createUserDto.email}})
+        // const userCandidate = await this.usersRepository.find({where: {email: createUserDto.email}})
 
-        if (userCandidate.length !== 0) {
-            throw new HttpException({
-                status: HttpStatus.CONFLICT,
-                error: 'This email is already taken'
-            }, HttpStatus.CONFLICT)
-        }
+        // if (userCandidate.length !== 0) {
+        //     throw new HttpException({
+        //         status: HttpStatus.CONFLICT,
+        //         error: 'This email is already taken'
+        //     }, HttpStatus.CONFLICT)
+        // }
 
-        const user = new User();
-        user.username = createUserDto.username;
-        user.email = createUserDto.email;
+        // const user = new User();
+        // user.username = createUserDto.username;
+        // user.email = createUserDto.email;
+        const user = {...new User(), ...createUserDto}
         user.password = await bcrypt.hash(createUserDto.password, 10);
         user.roles = [userRole];
 
-        const errors = await validate(user);
-        if (errors.length > 0) {
-            throw new HttpException({
-                status: HttpStatus.FORBIDDEN,
-                error: 'User data is not valid'
-            }, HttpStatus.FORBIDDEN)
-        }
+        // const errors = await validate(user);
+        // if (errors.length > 0) {
+        //     throw new HttpException({
+        //         status: HttpStatus.FORBIDDEN,
+        //         error: 'User data is not valid'
+        //     }, HttpStatus.FORBIDDEN)
+        // }
 
         return await this.usersRepository.save(user)
     } catch (e) {

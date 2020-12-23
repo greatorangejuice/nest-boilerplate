@@ -1,5 +1,5 @@
 import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
-import { ERole } from "../enums/role.enum";
+import { ERole } from "./enums/role.enum";
 
 
 @Entity()

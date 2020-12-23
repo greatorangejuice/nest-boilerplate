@@ -1,7 +1,17 @@
-import {Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn
+} from "typeorm";
 import {IsEmail} from "class-validator";
 import { Task } from "../tasks/tasks.entity";
 import {Role} from "../roles/user-roles.entity";
+import { RefreshToken } from "../refresh-token.entity";
 // import { Role } from "./roles/user-roles.entity";
 
 @Entity()
@@ -35,4 +45,8 @@ export class User {
 
   @OneToMany(() => Task, task => task.id)
   tasks: Task[]
+
+  @OneToOne(() => RefreshToken, refreshToken => refreshToken.user)
+  @JoinColumn()
+  refreshToken: RefreshToken;
 }

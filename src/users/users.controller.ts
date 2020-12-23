@@ -3,8 +3,8 @@ import {UsersService} from "./users.service";
 import {CreateUserDto} from "./dto/create-user.dto";
 import {UpdateUserDto} from "./dto/update-user.dto";
 import {JwtAuthGuard} from "../auth/guards/jwt-auth.guard";
-import {Roles} from "../common/decorators/roles.decorator";
-import {ERole} from "../models/enums/role.enum";
+import {Roles} from "../roles/roles.decorator";
+import {ERole} from "../models/roles/enums/role.enum";
 import {RolesGuard} from "../auth/guards/roles.guard";
 
 @Controller('users')
@@ -18,7 +18,7 @@ export class UsersController {
 
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(ERole.User)
+  @Roles(ERole.Admin)
   getAllUsers() {
     return this.usersService.getAll()
   }
