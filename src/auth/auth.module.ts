@@ -7,9 +7,12 @@ import { LocalStrategy } from "./local.strategy";
 import { environment } from "../../environment";
 import { JwtStrategy } from "./jwt.strategy";
 import { AuthController } from "./auth.controller";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { RefreshToken } from "../models/refresh-token.entity";
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([RefreshToken]),
     UsersModule,
     PassportModule,
     JwtModule.register({
