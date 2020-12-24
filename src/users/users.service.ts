@@ -4,7 +4,6 @@ import { User } from "../models/users/user.entity";
 import { Repository } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import * as bcrypt from 'bcrypt'
-import { validate } from "class-validator";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import {Role} from "../models/roles/user-roles.entity";
 
@@ -89,4 +88,5 @@ export class UsersService {
   async getAll(): Promise<User[]> {
       return this.usersRepository.find({relations: ['roles']})
   }
+
 }

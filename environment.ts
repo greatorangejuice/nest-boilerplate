@@ -1,3 +1,5 @@
 export const environment = {
-  secret: 'secretKey'
+  secret: 'secretKey',
+  expiresAccessToken: '30m',
+  expiresRefreshToken: '1h'
 }
