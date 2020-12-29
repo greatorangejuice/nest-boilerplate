@@ -6,6 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Role } from '../models/roles/user-roles.entity';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class UsersService {
@@ -22,32 +23,23 @@ export class UsersService {
       const userRole = roles.find(
         (role) => role.role.toLocaleLowerCase() === 'user',
       );
-      // const userCandidate = await this.usersRepository.find({where: {email: createUserDto.email}})
 
-      // if (userCandidate.length !== 0) {
-      //     throw new HttpException({
-      //         status: HttpStatus.CONFLICT,
-      //         error: 'This email is already taken'
-      //     }, HttpStatus.CONFLICT)
-      // }
-
-      // const user = new User();
-      // user.username = createUserDto.username;
-      // user.email = createUserDto.email;
-      const user = { ...new User(), ...createUserDto };
+      const user = new User();
+      user.username = createUserDto.username;
+      user.email = createUserDto.email;
       user.password = await bcrypt.hash(createUserDto.password, 10);
       user.roles = [userRole];
 
-      // const errors = await validate(user);
-      // if (errors.length > 0) {
-      //   throw new HttpException(
-      //     {
-      //       status: HttpStatus.FORBIDDEN,
-      //       error: 'User data is not valid',
-      //     },
-      //     HttpStatus.FORBIDDEN,
-      //   );
-      // }
+      const errors = await validate(user);
+      if (errors.length > 0) {
+        throw new HttpException(
+          {
+            status: HttpStatus.FORBIDDEN,
+            error: 'User data is not valid',
+          },
+          HttpStatus.FORBIDDEN,
+        );
+      }
 
       return await this.usersRepository.save(user);
     } catch (e) {
@@ -65,7 +57,7 @@ export class UsersService {
 
   async updateUsername(
     updateUserDto: UpdateUserDto,
-    id: number,
+    id: string,
   ): Promise<User> {
     try {
       const olderUser = await this.usersRepository.findOneOrFail(id);

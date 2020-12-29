@@ -9,6 +9,7 @@ import {
 import { IsEmail } from 'class-validator';
 import { Task } from '../tasks/tasks.entity';
 import { Role } from '../roles/user-roles.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User {
@@ -22,6 +23,7 @@ export class User {
   username: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @Column({
