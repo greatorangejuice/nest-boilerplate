@@ -1,11 +1,19 @@
-import {Body, Controller, Get, Param, Post, Put, UseGuards} from "@nestjs/common";
-import {UsersService} from "./users.service";
-import {CreateUserDto} from "./dto/create-user.dto";
-import {UpdateUserDto} from "./dto/update-user.dto";
-import {JwtAuthGuard} from "../auth/guards/jwt-auth.guard";
-import {Roles} from "../roles/roles.decorator";
-import {ERole} from "../models/roles/enums/role.enum";
-import {RolesGuard} from "../auth/guards/roles.guard";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
+import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Roles } from '../roles/roles.decorator';
+import { ERole } from '../models/roles/enums/role.enum';
+import { RolesGuard } from '../auth/guards/roles.guard';
 
 @Controller('users')
 export class UsersController {
@@ -13,25 +21,28 @@ export class UsersController {
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto)
+    return this.usersService.create(createUserDto);
   }
 
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(ERole.Admin)
   getAllUsers() {
-    return this.usersService.getAll()
+    return this.usersService.getAll();
   }
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   @Roles(ERole.User)
   getUserById(@Param('id') id: number) {
-    return this.usersService.getUserById(id)
+    return this.usersService.getUserById(id);
   }
 
   @Put('/update/:id')
-  updateUsername(@Body() updateUserDto: UpdateUserDto, @Param('id') id: number) {
-    return this.usersService.updateUsername(updateUserDto ,id)
+  updateUsername(
+    @Body() updateUserDto: UpdateUserDto,
+    @Param('id') id: number,
+  ) {
+    return this.usersService.updateUsername(updateUserDto, id);
   }
 }

@@ -1,6 +1,12 @@
-import {Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
-import {IsDate} from "class-validator";
-import {User} from "../users/user.entity";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { IsDate } from 'class-validator';
+import { User } from '../users/user.entity';
 
 @Entity()
 export class Task {
@@ -20,9 +26,9 @@ export class Task {
   @IsDate()
   deadlineTime: Date;
 
-  @ManyToOne(() => User, user => user.tasks)
-  customer: User
+  @ManyToOne(() => User, (user) => user.tasks)
+  customer: User;
 
-  @ManyToOne(() => User, user => user.tasks)
-  executor: User
+  @ManyToOne(() => User, (user) => user.tasks)
+  executor: User;
 }
