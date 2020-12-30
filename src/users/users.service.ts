@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../models/users/user.entity';
 import { Repository } from 'typeorm';
@@ -16,35 +16,40 @@ export class UsersService {
     @InjectRepository(Role)
     private readonly rolesRepository: Repository<Role>,
   ) {}
+  res: Response;
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    try {
-      const roles = await this.rolesRepository.find();
-      const userRole = roles.find(
-        (role) => role.role.toLocaleLowerCase() === 'user',
-      );
+    // try {
+    //
+    // } catch (e) {
+    //   throw new HttpException(e.message, HttpStatus.CONFLICT);
+    // }
 
-      const user = new User();
-      user.username = createUserDto.username;
-      user.email = createUserDto.email;
-      user.password = await bcrypt.hash(createUserDto.password, 10);
-      user.roles = [userRole];
+    const roles = await this.rolesRepository.find();
+    const userRole = roles.find(
+      (role) => role.role.toLocaleLowerCase() === 'user',
+    );
 
-      const errors = await validate(user);
-      if (errors.length > 0) {
-        throw new HttpException(
-          {
-            status: HttpStatus.FORBIDDEN,
-            error: 'User data is not valid',
-          },
-          HttpStatus.FORBIDDEN,
-        );
-      }
+    const user = new User();
+    user.username = createUserDto.username;
+    user.email = createUserDto.email;
+    user.password = await bcrypt.hash(createUserDto.password, 10);
+    user.roles = [userRole];
 
-      return await this.usersRepository.save(user);
-    } catch (e) {
-      throw new HttpException(e.message, HttpStatus.CONFLICT);
+    const errors = await validate(user);
+    if (errors.length > 0) {
+      console.log(errors[0].constraints);
+
+      // throw new HttpException(
+      //   {
+      //     status: HttpStatus.FORBIDDEN,
+      //     error: 'User data is not valid',
+      //   },
+      //   HttpStatus.FORBIDDEN,
+      // );
     }
+
+    return await this.usersRepository.save(user);
   }
 
   async getUserById(id: number): Promise<User> {
