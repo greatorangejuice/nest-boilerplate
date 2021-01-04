@@ -12,7 +12,6 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ERole } from '../models/roles/enums/role.enum';
-import { CustomPipe } from '../common/pipes/custom.pipe';
 import { Auth } from '../auth/auth.decorator';
 
 @Controller('users')
@@ -35,7 +34,7 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   @Auth(ERole.User)
-  getUserById(@Param('id', CustomPipe) id: number) {
+  getUserById(@Param('id') id: number) {
     return this.usersService.getUserById(id);
   }
 
