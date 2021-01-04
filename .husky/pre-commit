@@ -1,0 +1,8 @@
+#!/bin/sh
+. "$(dirname $0)/_/husky.sh"
+
+
+npx eslint-config-prettier path/to/src/main.js
+npx eslint src/
+npx prettier --check .
+npx prettier --write .
